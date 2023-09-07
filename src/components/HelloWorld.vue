@@ -1,44 +1,51 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
-</script>
-
 <template>
-  <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      You’ve successfully created a project with
-      <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
-    </h3>
+  <div id="mapid">
+    <l-map ref="map" :zoom="zoom" :center="coordinates" @click="addMarker">
+      <l-tile-layer
+        :url="url"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+      <l-marker v-for="marker, index in markers" :lat-lng="marker" @click="removeMarker(index)" :key="index"></l-marker>
+    </l-map>
   </div>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
+<script>
+import "leaflet/dist/leaflet.css";
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
+export default {
+  components: {
+    LMap,
+    LTileLayer,
+    LMarker
+  },
+  data() {
+    return {
+      zoom: 5,
+      coordinates : [48.858560644769824, 2.294481307987543],
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      markers: []
+    };
+  },
+  methods: {
+    addMarker(event) {
+      this.markers.push(event.latlng);
+    },
+    removeMarker(index) {
+      this.markers.splice(index, 1);
+    },
   }
+};
+</script>
+
+<style>
+#mapid {
+  height:100%;
+  width:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

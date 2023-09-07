@@ -4,15 +4,10 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 3000;
 const path = __dirname + '/dist';
-
 const mongo = require('./src/server/mongo.js');
 
-// parse requests of content-type - application/json
 app.use(bodyParser.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static(path));
 
 app.get('/', function (req, res) {
